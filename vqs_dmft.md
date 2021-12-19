@@ -1,6 +1,6 @@
 ---
 marp: true
-theme: gaia
+theme: default
 size: 16:9
 paginate: true
 #headingDivider: 2
@@ -17,21 +17,35 @@ _footer: © 2021 12/21 Seminor @ condensed matter theory of Saitama University
 -->
 
 
-### **Hybrid quantum-classical algorithm for computing imaginary-time correlation functions**
+# **Hybrid quantum-classical algorithm for computing imaginary-time correlation functions**
 
- **Today's talk is based on the following preprint**
- <https://scirate.com/arxiv/2112.02764>
+
 
 **Rihito Sakurai, Ph.D. student of the Graduate School of Science & Engineering, Saitama University**
 
-![bg blur::10px　opacity:0.2 saturate:3](./circle.jpg)
+
+<!--![bg blur::10px　opacity:0.2 saturate:3](./circle.jpg)-->
 
 
 
 ---
-1. [数式](#3)
-2. [inline](#4)
-3. [左に画像を入れる](#5)
+ #### **Today's talk is based on the following preprint**
+ 
+ ![bg  center](./sample4.drawio.svg)
+ <!--![80% bg right:50%](./zu_svg_jpg/wataru_mizukami.svg)-->
+ 
+ **Hybrid quantum-classical algorithm for computing imaginary-time correlation functions**
+ <https://scirate.com/arxiv/2112.02764>
+
+ **collarators**
+ Wataru Mizukami (QIQB, Oska Univ.),
+ Hiroshi Shinaoka (Saitama Univ.)
+
+ 
+
+
+
+
 
 
 ---
