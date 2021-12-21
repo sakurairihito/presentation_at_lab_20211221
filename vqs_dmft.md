@@ -19,7 +19,9 @@ footer: ""
   top: 20px;
   left: 830px;
 }
+    section { font-size: 160%; }
 </style>
+
 
 
 
@@ -70,8 +72,10 @@ New preprint
 
 ---
 # Computational materials science
-
-- DFTあたりから始める
+- 物質の計算。
+- 平均場
+- DFT→DMFT
+- DFTの概念？得意領域？
 - 単一のスレーター行列で状態を近似
 - 半導体、金属の電子状態の記述は成功
 - 強相関だと量子的な重ね合わせやエンタングルメントの増加により、DFT単体では記述が難しい
@@ -82,6 +86,11 @@ New preprint
 # Dynamical mean-field theory (DMFT)
 
 ![bg center width:140% height:135%](drawio/dmft.drawio.svg)
+
+- effective bath parameters are determined from the self-consistent condition:
+$$
+G_{\mathrm{imp}}=G_{\mathrm{loc}}^{\mathrm{lattice}} \equiv \sum_{\boldsymbol{k}} \frac{1}{i \omega_{n}-\left(\epsilon_{\boldsymbol{k}}-\mu\right)-\Sigma}
+$$
 
 - 
 - The biggest bottle neck: **quantum impurity problem (Computing Green's function)**
@@ -112,6 +121,13 @@ Green's functions
 <!--![bg center width:140% height:135%](drawio/dmft.drawio.svg)-->
 
 ##### Hamiltonian
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 170%; }
+</style>
+
 
   $${H} = \sum_{ij}^N t_{ij} \hat c^\dagger_i \hat c_j + \frac{1}{4} \sum_{ijkl} U_{ikjl}\hat c_i^\dagger \hat c_j^\dagger \hat c_l \hat c_k - \mu \sum_i \hat c^\dagger_i \hat c_i,$$
 
@@ -136,6 +152,14 @@ $$
 ---
 # Outline of our algorithm 
 
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 170%; }
+</style>
+
+
 <!--文字を上から書くようにする。デフォルトだと中央から書き始める。-->
 <style scoped>
     section {
@@ -148,22 +172,24 @@ $$
 -  Introduce a fine mesh of $\tau$ in [-$\beta$ / 2, $\beta$ / 2]  
 -  Then, compute $G_{ij}(\tau)$ 
 
+For $\tau$>0, 
 $$
 \begin{aligned}
 G_{i j}(\tau) &=-\operatorname{Tr}\left[e^{-\beta \hat{H}} c_{i}(\tau) c_{j}^{\dagger}(0)\right] / \operatorname{Tr}\left(e^{-\beta \mathcal{H}}\right) \\
-& \simeq-\underbrace{\left\langle\Phi_{G S}(0)\right| e^{-(\beta-\tau) \hat{H}}}_{\left\langle\Phi_{C}^{\prime}\right|}  c_{i}(0)\underbrace{e^{-\tau \hat{H}} c_{j}^{\dagger}(0)\left|\Phi_{G S}(0)\right\rangle}_{\left|\Phi_{C}\right\rangle}/\left(e^{-\beta E_{G}}\right)
+& \simeq-\underbrace{\left\langle\Phi_{G}(0)\right| e^{-(\beta-\tau) \hat{H}}}_{\left\langle\Phi_{C}^{\prime}\right|}  c_{i}(0)\underbrace{e^{-\tau \hat{H}} c_{j}^{\dagger}(0)\left|\Phi_{G}(0)\right\rangle}_{\left|\Phi_{C}\right\rangle}/\left(e^{-\beta E_{G}}\right)
 \end{aligned}
 $$
 
 ![bg center width:140% height:135%](drawio/stage.drawio.svg)
 
 ---
-# Ground-state calculation 
+# STAGE1: Ground-state calculation 
 
 <style scoped>
     section {
         justify-content: start;
     }
+    section { font-size: 170%; }
 </style>
 
 
@@ -176,20 +202,31 @@ H & \rightarrow \sum_{p}^{} h_{p} S_{p},  S_{p}\in\{X, Y, Z, I\}^{\otimes m}
 \end{aligned}
 $$
 
-### Variational Quantum Eigensolver (VQE)
+### Variational Quantum Eigensolver (VQE) ------>
+:small_blue_diamond:**Optimization**: parameter-shift rule
+ <https://arxiv.org/pdf/1803.00745.pdf>
+ 
 
-- Selection of anzatz 
-- 0ptimization
-(Gradient based opt or 
-parameter-shift rule 
+$\left.\frac{\partial\langle H(\theta)\rangle}{\partial \theta_{i}}=\frac{1}{2}\left( H\left(\theta+\frac{\pi}{2} e_{i}\right)\right)-\left\langle H\left(\theta-\frac{\pi}{2} e_{i}\right)\right\rangle\right)$
+$(U(\boldsymbol{\theta})=\prod_{k} e^{-i \theta_{k} P_{k} / 2})$
+
 
 ![bg center width:120% height:118%](drawio/vqe.drawio.svg)
 
+
 ---
-# Single-particle excitation
+# STAGE2: Single-particle excitation
+
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 170%; }
+</style>
+
 
 <!--![bg center width:120% height:118%](drawio/trans_amp.drawio.svg)-->
-![bg right:49% contain](zu_svg_jpg/transition_amplitude_2.svg)
+![bg right:51% contain](zu_svg_jpg/transition_amplitude_2.svg)
 <style scoped>
     section {
        text-align: left;
@@ -220,136 +257,191 @@ $c_{1}=\left\langle\phi_{\mathrm{EX}}\left(\vec{\theta}_{\mathrm{EX}}^{*}\right)
 
 
 ---
-# Imaginary-time evolution
+# STAGE3: Imaginary-time evolution
+
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 143%; }
+</style>
+
+
+- The time-dependent Schrödinger equation
+
+$\frac{\mathrm{d}}{\mathrm{d} \tau}|\tilde{\Psi}(\tau)\rangle=-\left({H}-E_{\tau}\right)|\tilde{\Psi}(\tau)\rangle$
+
+$|\tilde{\Psi}(\tau)\rangle \equiv|\Psi(\tau)\rangle / \sqrt{\langle\Psi(\tau) \mid \Psi(\tau)\rangle}, E_{\tau}\equiv\langle\tilde{\Psi}(\tau)|{H}| \tilde{\Psi}(\tau)\rangle$
+
+- Prepare the following state on a quantum computer
+$|\tilde{\Psi}(\tau)\rangle=|\phi(\vec{\theta}(\tau))\rangle$
+$|\Psi(\tau)\rangle=e^{\eta(\tau)}|\phi(\vec{\theta}(\tau))\rangle -(1)$
+
+- Introduce Norm $e^{\eta(\tau)}$ : 
+$\frac{\mathrm{d}}{\mathrm{d} \tau}|\Psi(\tau)\rangle=-{H}|\Psi(\tau)\rangle -(2)$ 
+- From (1) and (2), 
+$\frac{d\eta(\tau)}{d\tau}=-E_{\tau} , (\eta \in \mathbb{R}  \text{ and} \frac{\mathrm{d}\langle\Psi \mid \Psi\rangle}{\mathrm{d} \tau}=0)$
+
+Question: How do we determine $\vec{\theta}(\tau)$ on a discrete mesh of $\tau$ ?
+**McLachlan’s variational principal**  (A. McLachlan, Mol. Phys 8, 39-44 (1996))
+$$\min \delta\left\|\left(\frac{\mathrm{d}}{\mathrm{d} \tau}+{H}-E_{\tau}\right) \mid \phi(\vec{\theta}(\tau))\rangle\right\|$$
+
 
 
 
 ---
-# Transition amplitude 
+# STAGE3: Imaginary-time evolution
 
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 150%; }
+</style>
+
+#### Varuational Quantum Simulation (VQS)
+$\min \delta\left\|\left(\frac{\mathrm{d}}{\mathrm{d} \tau}+{H}-E_{\tau}\right) \mid \phi(\vec{\theta}(\tau))\rangle\right\|$
+
+$\sum_{j} A_{i j} \dot{\theta}_{j}= C_{i}$
+
+$\begin{aligned} A_{i j} & \equiv \mathcal{R} \frac{\partial\langle\phi(\vec{\theta})|}{\partial \theta_{i}} \frac{\partial|\phi(\vec{\theta})\rangle}{\partial \theta_{j}},  C_{i} & \equiv-\mathcal{R}\langle\phi(\tau)| \mathcal{H} \frac{\partial|\phi(\vec{\theta})\rangle}{\partial \theta_{i}} \end{aligned}$
+
+$\vec{\theta}(\tau+\Delta \tau) \simeq \vec{\theta}(\tau)+A^{-1} \vec{C} \Delta \tau$
+
+
+
+#### Direct VQS
+$
+\begin{aligned}
+&\theta(\tau+\Delta \tau) \\
+&\simeq \underset{\vec{\theta}}{\operatorname{argmin}} \||\phi(\vec{\theta})\rangle-|\Psi(\tau)\rangle+\Delta \tau\left(\mathcal{H}-E_{\tau}\right)|\Psi(\tau)\rangle \|
+\end{aligned}
+$
+$=\underset{\vec{\rightarrow}}{\operatorname{argmin}} \operatorname{Re} \mid \Delta \tau\langle\phi(\vec{\theta})|H| \Psi(\tau)\rangle-\left(\Delta \tau E_{\tau}+1\right)\langle\phi(\vec{\theta}) \mid \Psi(\tau)\rangle$
+
+
+
+---
+# STAGE4: Transition amplitude 
+![bg right:48% contain](zu_svg_jpg/transition_amplitude_2.svg)
+transition amplitude
+$\left\langle\Psi_{\mathrm{G}}\left|A_{\pm}\right| \Psi_{\mathrm{IM}}\right\rangle$
+
+-->$G(\tau)
+=-c_{1} e^{\eta(\tau)} e^{\tau E_{\mathrm{G}}}\left\langle\Psi_{\mathrm{G}}\left|A_{\pm}\right| \Psi_{\mathrm{IM}}\right\rangle$
+
+
+
+
+---
+# Numerical Details
+
+<style scoped>
+  
+    section {
+        justify-content: start;
+        text-align: ;
+    }
+    section { font-size: 150%; }
+</style>
+
+#### Ansatz
+- Unitary coupled cluster with generalized singles and doubles (UCCGSD)
+(Nooijen, Marcel. Phys. Rev. Lett. **84**, 2108 (2000), 
+J. Lee, _et al_., Journal  of  chemical  theory and computation **15**, 311 (2019))
+- $U(\boldsymbol{\theta})=
+ \prod_{i, j, a, b=1}^{n}\left\{e^{\theta_{i j}^{a b} a_{a}^{\dagger} a_{b}^{\dagger} a_{j} a_{i}- \theta_{i j}^{a b}a_{i}^{\dagger} a_{j}^{\dagger} a_{b} a_{a}}\right\} \prod_{a, i=1}^{n}\left\{e^{\theta_{i}^{a} a_{a}^{\dagger} a_{i}-\theta_{i}^{a } a_{i}^{\dagger} a_{a}}\right\}$
+
+- $N_p:$ # of the parameters ~ $O\left(n_{}^{4}\right)$
+
+#### Optimization
+- A quasi-Newton method (BFGS method)
+
+
+#### Non-uniform mesh of $\tau$ in $[-\beta / 2, \beta / 2]$ ($\beta=1000$)
+- A sparse mesh generated according to the intermediate-representation (IR) basis. 
+(J. Li _et al_.,  PRB **101**, 035144 (2020))
+
+---
+# Results: Dimer model
+
+
+<style scoped>
+  
+    section {
+        justify-content: start;
+        text-align: ;
+    }
+    section { font-size: 150%; }
+</style>
+
+
+![bg center width:120% height:165%](drawio/dimer_model.drawio.svg)
+<!--![bg center width:140% height:116%](zu_svg_jpg/dimer_model.svg)-->
+ 
+$
+\begin{aligned}
+\mathcal{H} &=U \hat{n}_{1 \dagger} \hat{n}_{1 \downarrow}-\mu \sum_{\sigma=\uparrow, \downarrow} \hat{n}_{1 \sigma} -V \sum_{\sigma=\uparrow, \downarrow}\left(\hat{c}_{1 \sigma}^{\dagger} \hat{c}_{2 \sigma}+\hat{c}_{2 \sigma}^{\dagger} \hat{c}_{1 \sigma}\right)+\epsilon_{b} \sum_{\sigma=\uparrow, \downarrow} \hat{n}_{2 \sigma}
+\end{aligned}
+$
+
+- 79 sparse sampling points 
+- Non-diagonal componet also can be computed
+
+---
+
+<style scoped>
+  
+    section {
+        justify-content: start;
+        text-align: ;
+    }
+    section { font-size: 150%; }
+</style>
+
+
+# Results : Four-site model 
+![bg center width:110% height:145%](drawio/foursite_model.drawio.svg)
+
+$
+\begin{aligned}
+H &=U \hat{n}_{0 \uparrow} \hat{n}_{0 \downarrow}-\mu \sum_{\sigma=\uparrow, \downarrow} \hat{n}_{0 \sigma} -\sum_{k=1}^{3} \sum_{\sigma=\uparrow, \downarrow} V_{k}\left(\hat{c}_{0 \sigma}^{\dagger} \hat{c}_{k \sigma}+\hat{c}_{k \sigma}^{\dagger} \hat{c}_{0 \sigma}\right)+\epsilon_{k} \sum_{k=1}^{3} \sum_{\sigma=\uparrow, \downarrow} \hat{n}_{k \sigma}
+\end{aligned}
+$
+
+- At half-filling
+- 70 sparse sampling points + adaptive construction of the mesh
+
+
+---
+<style scoped>
+  
+    section {
+        justify-content: start;
+        text-align: ;
+    }
+    section { font-size: 150%; }
+</style>
+
+
+# Results : Fourier-transformed Green's function
+
+- We use irbasis (N. Chikano _et al_., Comput. Phys. Commun. **240**, 181 (2019))
+- 
+
+
+![bg center width:110% height:140%](drawio/fourier.drawio.svg)
 
 ---
 ## Conclution
-:thumbsup:A new hybrid quantum classical algorithm for computing imaginary-time Green's functions by applying the VQS
-:thumbsup:Out algorithms efficiently computes GF using non-uniform mesh based on IRbasis 
-:thumbsdown:The hardware cost for transition amplitude is high for NISQ devices ([link of slide2](#2))
-:bulb:[Classical shadow](https://arxiv.org/abs/2110.02965) may be the savior in the age of NISQ era.
+- New hybrid quantum classical algorithm for computing imaginary-time Green's functions by applying the VQS
+- Out algorithms efficiently computes GF using non-uniform mesh based on IRbasis 
+- No need to calculate expectation value of the square of the Hamiltonian 
+(H. Chen et _al_., arXiv :2105.01703v2)
+- The hardware cost for transition amplitude may be high for NISQ devices :disappointed_relieved:
 
 
-####  future plan
-:one:**noise model**: 〜〜〜
-:two:**compact ansatz**:  〜〜〜
+##  future plan
+:one:**Simulation under realistic noise model**: 2 qubit error
+:two:**Ansatz for impurity models**: tensor decomposition, topology of impurity models
 
----
-# Marpを使った感想
-
-
-### 課題
-- デフォルトで、図を好きな枚数・位置に貼り付けができない:crying_cat_face:
-- 今回は、drawioというアプリを使って、特定位置へ図貼り付けをした
-
-
-### 欲しい機能
-- スライドの枚数を全て表示させたい
-- 文字の背景に色をつけたい
-- ~~文字のフォントをTimes New Romanにしたい。~~
-- pdfでも貼り付けられるようにしてほしい（or pdf --> svg, jpgへの変換ツールの充実）
-
----
-
-### 数式
-
-$$I_{xx}=\int\int_Ry^2f(x,y)\cdot{}dydx$$
-
-Yahoo!!
-
----
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
----
-
-
-## <!-- fit --> 数式と画像をいれる
-
-<style>
-img[alt~="center"] {
-  display: block;
-  margin: 0 auto;
-}
-</style>
-
-![60% bg left:50%](drawio/sample2.drawio.svg)
-
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
----
-#### Imaginary-time Green's function
-
-$$
-\begin{aligned}
-G_{i j}(\tau) &=-\operatorname{Tr}\left[e^{-\beta \hat{H}} c_{i}(\tau) c_{j}^{\dagger}(0)\right] / \operatorname{Tr}\left(e^{-\beta \mathcal{H}}\right) \\
-& \simeq-\underbrace{\left\langle\Phi_{G S}(0)\right| e^{-(\beta-\tau) \hat{H}}}_{\left\langle\Phi_{C}^{\prime}\right|}  c_{i}(0)\underbrace{e^{-\tau \hat{H}} c_{j}^{\dagger}(0)\left|\Phi_{G S}(0)\right\rangle}_{\left|\Phi_{C}\right\rangle}/\left(e^{-\beta E_{G}}\right)
-\end{aligned}
-$$
-
-$ax^2+bx+2$
-*dddd*
-**dddd**
-dddd<br />
-dddd
-
-
----
-
-- fff
-''''
-   ffff
-'''' 
-{.info}
-:   これはアイコンなしの付箋です。__
-    余白も小さくコンパクトになります。
-
-{.note} メモ
-:   Markdownはとても便利です。␣␣
-    複数行に分けて書くこともできます。
-
-<div style="text-align:center">中央寄せにしたい文章</div>
-
----
-
-```
-package helloworld;
-
-public class Hello {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-    }
-}
-```
-`インラインコード`
