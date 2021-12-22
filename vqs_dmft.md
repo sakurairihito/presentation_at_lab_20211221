@@ -72,47 +72,54 @@ New preprint
 
 ---
 # Computational materials science
-- 物質の計算。
-- 平均場
-- DFT→DMFT
-- DFTの概念？得意領域？
-- 単一のスレーター行列で状態を近似
-- 半導体、金属の電子状態の記述は成功
+
+- 密度汎関数理論 (DFT)の概略とその問題点についてまとめる 
+- 単一のスレーター行列で物質の電子状態を近似
+- 多くの半導体、金属の電子状態の記述は成功
 - 強相関だと量子的な重ね合わせやエンタングルメントの増加により、DFT単体では記述が難しい
-- なぜDMFTなのか？
-- 固体の一部の自由度に着目し、相関のある不純物とその周りの環境の影響を考慮することで、固体の計算にアプローチする手法
+
 
 ---
 # Dynamical mean-field theory (DMFT)
 
-![bg center width:140% height:135%](drawio/dmft.drawio.svg)
+![bg right width:160% height:165%](drawio/dmft.drawio.svg)
+
 
 - effective bath parameters are determined from the self-consistent condition:
 $$
 G_{\mathrm{imp}}=G_{\mathrm{loc}}^{\mathrm{lattice}} \equiv \sum_{\boldsymbol{k}} \frac{1}{i \omega_{n}-\left(\epsilon_{\boldsymbol{k}}-\mu\right)-\Sigma}
 $$
 
-- 
-- The biggest bottle neck: **quantum impurity problem (Computing Green's function)**
-- 
-- No efficient method for computing imaginary-time 
-Green's functions
-- ddddd
 
+- The biggest bottle neck: **quantum impurity problem (Computing Green's function)**
+- Classical methods: Quantum monte carlo, Tensor network
+- Solving impurity models wit multi-orbital and multi impurity sites is challenging task
 ---
+
+
 # Solving impurity problems with Quantum computer
+
+<!--このスライドのみ以下を適用-->
+<!--
+_class: lead
+_paginate: false
+_header:   ""
+_footer:   ""
+-->
+
+
 #### Foult-tolerant quantum computer
 
-- Quantum phase estimation algorithm (reference:)
+- Quantum phase estimation algorithm 
+- It assumes fault-tolerant QC
 
 #### Quantum devices with limited hardware resources 
 - e.g.) Noisy Intermediate Scale Devices (NISQ) 
 noisy quantum devices with ~100 qubits, about 100 depth (# of time steps)
-
-- 
-- No efficient method for computing imaginary-time 
-Green's functions
-- ddddd
+- need to calculate expectation value of the square of the Hamiltonian 
+(H. Chen et _al_., arXiv :2105.01703v2) 
+- Efficient methods for computing imaginary-time Green's functions need to be explored
+- Our work: new algorithm to compute the imaginary-time Green's function
 
 
 ---
@@ -150,6 +157,23 @@ $$
 
 
 ---
+
+- 実例として、ハバードアトムなどのグリーン関数の図を見せる(上のスライド）)
+- 指数関数
+- 数式との対応づける。
+- N --> N+1 --> N
+- 虚時間が
+- Non-uniform なメッシュの図
+- correction vectorの先行研究と何が非自明なのか。
+- $\beta$: fictious temperature
+- 応答関数で記述される物理量（スペクトル関数とか格子スピン感受率）が物性では重要
+- DMFT  
+- 複数不純物クラスターの低温での計算は困難。
+- 将来的に、量子で
+- 有限温度の
+---
+
+
 # Outline of our algorithm 
 
 <style scoped>
@@ -317,7 +341,7 @@ $
 &\simeq \underset{\vec{\theta}}{\operatorname{argmin}} \||\phi(\vec{\theta})\rangle-|\Psi(\tau)\rangle+\Delta \tau\left(\mathcal{H}-E_{\tau}\right)|\Psi(\tau)\rangle \|
 \end{aligned}
 $
-$=\underset{\vec{\rightarrow}}{\operatorname{argmin}} \operatorname{Re} \mid \Delta \tau\langle\phi(\vec{\theta})|H| \Psi(\tau)\rangle-\left(\Delta \tau E_{\tau}+1\right)\langle\phi(\vec{\theta}) \mid \Psi(\tau)\rangle$
+$=\underset{\vec{\theta}}{\operatorname{argmin}} \operatorname{Re} \mid \Delta \tau\langle\phi(\vec{\theta})|H| \Psi(\tau)\rangle-\left(\Delta \tau E_{\tau}+1\right)\langle\phi(\vec{\theta}) \mid \Psi(\tau)\rangle$
 
 
 
