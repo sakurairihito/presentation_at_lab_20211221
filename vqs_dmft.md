@@ -456,6 +456,9 @@ $
 
 ![bg center width:110% height:140%](drawio/fourier.drawio.svg)
 
+<!--ここにコメントアウトした文字が反映される！-->
+<!--$\tau$-->
+
 ---
 ## Conclution
 - New hybrid quantum classical algorithm for computing imaginary-time Green's functions by applying the VQS
