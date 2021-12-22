@@ -1,36 +1,20 @@
-name: MarpCLI-GitHub-Actions
+name: Publish GitHub Pages
 on:
   push:
     branches:
       - main
-    paths:
-      - "contents/**"
+
 jobs:
-  marp-to-pdf:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set input_dir
-        run: |
-          while read line;
-          do
-            echo $line >> $GITHUB_ENV
-          done<./config
-      - name: Create output DIR
-        run: |
-          mkdir ${{env.DST}}
-          chmod 777 -R $_
-      - name: Export PDF
-        run: docker run --rm --init -v "$(pwd):/home/marp/app/"
-          -e LANG="ja_JP.UTF-8" -e MARPID="$(id -u):$(id -g)" marpteam/marp-cli ${{env.DIR}}/main.md
-          --${{env.FORMAT}}
-          -o ${{env.DST}}/main.${{env.FORMAT}}
-          --allow-local-files
-      - name: Create Releases
-        uses: ncipollo/release-action@v1
+
+      - name: Convert Markdown into HTML and PDF
+        uses: KoharaKazuya/marp-cli-action@v1
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          allowUpdates: true
-          artifacts: ${{env.DST}}/main.${{env.FORMAT}}
-          token: ${{secrets.GITHUB_TOKEN}}
-          tag: v${{env.RELEASE_VERSION}}
-          name: Release ${{env.RELEASE_VERSION}}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./contents/
