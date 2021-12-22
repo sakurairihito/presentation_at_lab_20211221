@@ -59,7 +59,7 @@ New preprint
 ===========
 
 
-  ![bg  center](drawio/sample4.drawio.svg)
+  <!--![bg  center](drawio/sample4.drawio.svg)-->
   <!--![80% bg right:50%](./drawio/wataru_mizukami.svg)-->
   
   **Today's talk is based on following preprint**
