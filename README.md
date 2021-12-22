@@ -1,11 +1,15 @@
 # presentation_at_lab_20211221
 
-Marp + GithuActions
+## Marp + GithuActions
 
-HTML
+HTML:
 https://sakurairihito.github.io/presentation_at_lab_20211221/
 
 PDFには図がうまく表示されない。理由は不明
+
+## About Marp
+
+
 
 ### GithubActionsの参考ウェブサイト
 - https://github.com/KoharaKazuya/marp-cli-action-gh-pages-template
