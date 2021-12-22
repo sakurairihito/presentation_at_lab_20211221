@@ -1,4 +1,3 @@
-{
-    "directory": "marp",
-    "output_format": "pdf"
-}
+DIR=contents
+DST=dist
+FORMAT=pdf

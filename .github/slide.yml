@@ -1,22 +1,38 @@
 name: marp-GitHub-actions
-on: [push]
+on: 
+   push:
+     branches:
+         - master
+         paths:
+         - "contents/**"
+
+
 jobs:
   marp-to-pdf:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt-get update & sudo apt-get install jq
-      - run: |
-          directory=$(cat config.json | jq -r .directory)
-          output_format=$(cat config.json | jq -r .output_format)
-          echo "::set-output name=DIR::${directory}"
-          echo "::set-output name=FORMAT::${output_format}"
-        id: config
-      - run: docker run --rm -u root --init -v "$(pwd):/home/marp/app/" 
-              -e LANG=$LANG marpteam/marp-cli ${{steps.config.outputs.DIR}}/slide.md 
-              --${{steps.config.outputs.FORMAT}} 
-              -o ${{steps.config.outputs.DIR}}.${{steps.config.outputs.FORMAT}}
-      - uses: actions/upload-artifact@v2
+      - name: Set input_dir
+        run: |
+          while read line;
+          do
+            echo $line >> $GITHUB_ENV
+          done<./config
+      - name: Create output DIR
+        run: |
+          mkdir ${{env.DST}}
+          chmod 777 -R $_
+      - name: Export PDF
+        run: docker run --rm --init -v "$(pwd):/home/marp/app/"
+          -e LANG="ja_JP.UTF-8" -e MARPID="$(id -u):$(id -g)" marpteam/marp-cli ${{env.DIR}}/main.md
+          --${{env.FORMAT}}
+          -o ${{env.DST}}/main.${{env.FORMAT}}
+          --allow-local-files
+      - name: Create Releases
+        uses: ncipollo/release-action@v1
         with:
-          name: output_slide
-          path: ${{steps.config.outputs.DIR}}.${{steps.config.outputs.FORMAT}}
+          allowUpdates: true
+          artifacts: ${{env.DST}}/main.${{env.FORMAT}}
+          token: ${{secrets.GITHUB_TOKEN}}
+          tag: v${{env.RELEASE_VERSION}}
+          name: Release ${{env.RELEASE_VERSION}}
