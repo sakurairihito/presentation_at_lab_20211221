@@ -1,11 +1,11 @@
 # presentation_at_lab_20211221
 
-## Marp + GithuActions
+## Marp + Github Actions
 
 HTML:
 https://sakurairihito.github.io/presentation_at_lab_20211221/
 
-PDFには図がうまく表示されない。理由は不明
+(github actionで生成されたPDFには図がうまく表示されない。）
 
 ## About Marp
 
