@@ -2,7 +2,7 @@ name: MarpCLI-GitHub-Actions
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - "contents/**"
 jobs:
