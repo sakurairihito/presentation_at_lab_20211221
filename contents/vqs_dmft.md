@@ -19,22 +19,26 @@ footer: ""
   top: 20px;
   left: 830px;
 }
-    section { font-size: 160%; }
+    section { font-size: 150%; }
 </style>
 
 
-
+７
 
 <!--このスライドのみ以下を適用-->
 <!--
 _class: lead
 _paginate: false
 _header:   ""
-_footer: @物性理論セミナー　Date: 2021.12.21
+_footer: セミナー@産総研　Date: 2021.12.24
 -->
 
 <!--このスライドだけタイトル以外の文字を中央揃えにする。-->
 <style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 180%; }
     section {
         text-align: center;
     }
@@ -49,7 +53,14 @@ _footer: @物性理論セミナー　Date: 2021.12.21
 ---
 
 <!--このスライドだけタイトル以外の文字を中央揃えにする。-->
+
+
+
 <style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 170%; }
     section {
         text-align: center;
     }
@@ -71,12 +82,22 @@ New preprint
    Hiroshi Shinaoka (Saitama Univ.)
 
 ---
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 170%; }
+</style>
+
+
 # Computational materials science
 
 - 密度汎関数理論 (DFT)の概略とその問題点についてまとめる 
-- 単一のスレーター行列で物質の電子状態を近似
-- 多くの半導体、金属の電子状態の記述は成功
-- 強相関だと量子的な重ね合わせやエンタングルメントの増加により、DFT単体では記述が難しい
+- DFTとは？単一のスレーター行列で電子状態を近似。
+- DFTの成功例：多くの半導体や金属の電子状態の記述
+- メリット：計算量が少なくて済む。軌道の数Nの三乗の計算コストで済む。
+- 弱点；強相関電子系（銅酸化物高温超伝導、有機物質など）では、破綻する。エンタングルメントエントロピー
+- 
 
 
 ---
@@ -84,19 +105,37 @@ New preprint
 
 ![bg right width:160% height:165%](drawio/dmft.drawio.svg)
 
-
+- 
 - effective bath parameters are determined from the self-consistent condition:
-$$
-G_{\mathrm{imp}}=G_{\mathrm{loc}}^{\mathrm{lattice}} \equiv \sum_{\boldsymbol{k}} \frac{1}{i \omega_{n}-\left(\epsilon_{\boldsymbol{k}}-\mu\right)-\Sigma}
-$$
+- 動的な応答を記述するために広く用いられている。
+- スペクトル？
+- ざっくり話す
 
-
+---
+# Dynamical mean-field theory (DMFT)
 - The biggest bottle neck: **quantum impurity problem (Computing Green's function)**
 - Classical methods: Quantum monte carlo, Tensor network
 - Solving impurity models wit multi-orbital and multi impurity sites is challenging task
+- 単原子、少数軌道が限界（量子モンテカルロ法かDMRG）
+- 古典だと次元が粒子数に対して、指数的に増える
+- なぜ多軌道・多原子か？例えば、非従来型のd波超伝導の定量的記述が可能になる。
+- 大規模な系だと、量子計算が必要になる。
+
+<!-- -->
+
 ---
 
+- 自己無撞着計算の話
+- バスの離散化(Dicsritization the freedom of the environment with bath sites)
+- 実時間と許時間形式のメリット
+- 通常,虚数波数を用いることが多い。
+- 
 
+|    |  Real  | Imaginary   |
+| ---- | ---- | ---- |
+|  Pros  |  Easy in Reproducing spectral functions |  fewer bath sites    |
+|  Cons  |   many bath sites             | Difficulity in reproducing spectral functions <br> in the high frequency range      |
+---
 # Solving impurity problems with Quantum computer
 
 <!--このスライドのみ以下を適用-->
@@ -156,31 +195,19 @@ $$
 
 
 
----
 
-- 実例として、ハバードアトムなどのグリーン関数の図を見せる(上のスライド）)
-- 指数関数
-- 数式との対応づける。
-- N --> N+1 --> N
-- 虚時間が
-- Non-uniform なメッシュの図
-- correction vectorの先行研究と何が非自明なのか。
-- $\beta$: fictious temperature
-- 応答関数で記述される物理量（スペクトル関数とか格子スピン感受率）が物性では重要
-- DMFT  
-- 複数不純物クラスターの低温での計算は困難。
-- 将来的に、量子で
-- 有限温度の
 ---
 
 
 # Outline of our algorithm 
 
+
+
 <style scoped>
     section {
         justify-content: start;
     }
-    section { font-size: 170%; }
+    section { font-size: 150%; }
 </style>
 
 
@@ -213,9 +240,10 @@ $$
     section {
         justify-content: start;
     }
-    section { font-size: 170%; }
+    section { font-size: 150%; }
 </style>
 
+<!--ここはより簡潔なVQEの図に置き換える。例えば、Quantum easy taskとclassical-->
 
 ### Preparation
 - The hamiltonian need to be transformed to the qubit representation 
@@ -245,7 +273,7 @@ $(U(\boldsymbol{\theta})=\prod_{k} e^{-i \theta_{k} P_{k} / 2})$
     section {
         justify-content: start;
     }
-    section { font-size: 170%; }
+    section { font-size: 150%; }
 </style>
 
 
@@ -287,7 +315,7 @@ $c_{1}=\left\langle\phi_{\mathrm{EX}}\left(\vec{\theta}_{\mathrm{EX}}^{*}\right)
     section {
         justify-content: start;
     }
-    section { font-size: 143%; }
+    section { font-size: 150%; }
 </style>
 
 
@@ -307,8 +335,7 @@ $\frac{\mathrm{d}}{\mathrm{d} \tau}|\Psi(\tau)\rangle=-{H}|\Psi(\tau)\rangle -(2
 $\frac{d\eta(\tau)}{d\tau}=-E_{\tau} , (\eta \in \mathbb{R}  \text{ and} \frac{\mathrm{d}\langle\Psi \mid \Psi\rangle}{\mathrm{d} \tau}=0)$
 
 Question: How do we determine $\vec{\theta}(\tau)$ on a discrete mesh of $\tau$ ?
-**McLachlan’s variational principal**  (A. McLachlan, Mol. Phys 8, 39-44 (1996))
-$$\min \delta\left\|\left(\frac{\mathrm{d}}{\mathrm{d} \tau}+{H}-E_{\tau}\right) \mid \phi(\vec{\theta}(\tau))\rangle\right\|$$
+**McLachlan’s variational principal**  (A. McLachlan, Mol. Phys 8, 39-44 (1996)) $\min \delta\left\|\left(\frac{\mathrm{d}}{\mathrm{d} \tau}+{H}-E_{\tau}\right) \mid \phi(\vec{\theta}(\tau))\rangle\right\|$
 
 
 
@@ -347,6 +374,7 @@ $=\underset{\vec{\theta}}{\operatorname{argmin}} \operatorname{Re} \mid \Delta \
 
 ---
 # STAGE4: Transition amplitude 
+
 ![bg right:48% contain](zu_svg_jpg/transition_amplitude_2.svg)
 transition amplitude
 $\left\langle\Psi_{\mathrm{G}}\left|A_{\pm}\right| \Psi_{\mathrm{IM}}\right\rangle$
@@ -451,7 +479,8 @@ $
 # Results : Fourier-transformed Green's function
 
 - We use irbasis (N. Chikano _et al_., Comput. Phys. Commun. **240**, 181 (2019))
-- 
+- Matsubara Green's function 
+- Previous study: Corrrection vector
 
 
 ![bg center width:110% height:140%](drawio/fourier.drawio.svg)
@@ -472,3 +501,95 @@ $
 :one:**Simulation under realistic noise model**: 2 qubit error
 :two:**Ansatz for impurity models**: tensor decomposition, topology of impurity models
 
+
+
+
+
+---
+ 以下、聴講者からのコメントと質問をまとめたスライド。
+
+
+---
+# 柿澤コメント
+- VQEの図はより簡潔な図に置き換える
+- グリーン関数の引数に-はいらない（修正する）
+- 論文も直す必要性あり。
+- もう少し練習が必要
+
+---
+# 品岡コメント1
+- 論理を先に話すより結論を先に話す。
+- スライドの話の間の繋ぎを滑らかにする。要素感の接続。関連性を明確にする。特にイントロから結果に入る前あたりまで。
+- 
+- 
+
+---
+# 品岡コメント2
+
+<style scoped>
+    section {
+        justify-content: start;
+    }
+    section { font-size: 110%; }
+</style>
+
+
+- 実例として、ハバードアトムなどのグリーン関数の図を見せる(上のスライド）)
+- 指数関数
+- 数式との対応づける。
+- N --> N+1 --> N
+- 虚時間が
+- Non-uniform なメッシュの図
+- correction vectorの先行研究と何が非自明なのか。
+- $\beta$: fictious temperature
+- 応答関数で記述される物理量（スペクトル関数とか格子スピン感受率）が物性では重要。定量的な物性値が可能になる。
+- なぜ多軌道重要か。
+- DMFT  
+- 複数不純物クラスターの低温での計算は困難。
+- 将来的に、量子で
+- 有限温度の
+- 量子化学計算で使われるDMETとの違い。応答関数があるかないか。
+- 特に物性では、応答関数は重要。
+- 松原グリーン関数の定義と自己無撞着計算への必要性が抜けている気がします
+- 
+
+
+
+
+---
+# 星野質問
+- Q. DMFT自己無撞着計算はこのアルゴリズムを使って行っているのか？
+- A. いいえ、行っていない。自己無撞着計算で得られたパラメータだけを使っている。VQEとVQSが正確ならば、このパラメータが得られる。
+- 今後、ノイズや離散化誤差が自己無撞着計算にどのような影響を与えるのか、解析接続における誤差やノイズの影響を考慮していく。
+- Q. ４サイト不純物モデルに縮退はあるのか？
+- A. ない。ハーフフィリングから粒子がひとつ異なる粒子数を持つ部分空間をはる状態間で、固有エネルギーが非常に近い。
+- Q. 不安定性の原因は何か？そこにグリーン関数の構造はあるのか？
+- A. この図ではわからないが、構造（変化）は微妙に存在することは確認できた。
+- Q. 不安定性の原因を調べるために、小さいサイズの系のモデルで、パラメータの数をヒルベルト空間の次元より小さくしたアンザッツで解いたのか？
+- A. まだやっていない。
+- 内容はわかっている感じはした
+
+--- 
+# 産総研発表までに行うタスク一覧
+ **太字**は、優先度高め
+
+- **松原グリーン関数の定義をどこかに書く。多分、最初か、最後の結果のスライドのどっちか。**
+- **自己無撞着計算の必要性について述べる。** 最初に適当にパラメタを決める。そこから、ループをこれはバスに関するパラメータをアップデートする。不純物モデルと元々の格子系におけるグリーン関数が一致したら、計算を止める。
+- 
+- 最後のスライドに、不純物モデルに特化したアンザッツとして、工夫したアンザッツの足を制限した概念の図と、テンソル圧縮の先行文献みたいなものを載せる？
+- 最後のスライドに、現状のハードウェアでは、VQEで多軌道、多クラスターの不純物モデルの問題を解くには難しい。他のアルゴリズムが必要か？モンテカルロ＋量子コンピュータ？
+- **数値的不安定性の原因**については、今後行うことにかく？
+- **不純物モデルの定義のスライドにハミルトニアンのパラメータとアンザッツにつかったパラメータの数についても書く。**
+- VQEの図を簡略化する。あるいは今のスライドでもっと説明もちゃんとする。が、おそらく前者。？
+- 実周波数グリーン関数と虚時間グリーン関数
+
+---
+
+# 産総研発表までに行うタスク一覧2
+- DMFTを虚時間グリーン関数で行うメリット。バスの数が減らせる点。
+- ただ、解析接続時に高周波数の領域のスペクトル関数が精度良く再現しづらい。
+- 実時間・実周波数/虚時間・虚周波数
+- 実時間形式は、バスの数が多く
+- 
+
+|prso|cons|
