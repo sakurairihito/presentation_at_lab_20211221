@@ -151,6 +151,7 @@ _footer:   ""
 - Too much hardware resources
 
 #### Quantum devices with limited hardware resources 
+
 - e.g.) Noisy Intermediate Scale Devices (NISQ) 
 noisy quantum devices with ~100 qubits, about 100 depth (# of time steps)
 - Need to calculate expectation value of the square of the Hamiltonian 
@@ -613,3 +614,12 @@ $
 - 実時間と許時間形式のメリット
 - 通常,虚数波数を用いることが多い。
 - 
+
+---
+konnnitiha
+
+---
+
+MARP
+
+d
