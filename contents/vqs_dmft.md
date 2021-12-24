@@ -23,8 +23,6 @@ footer: ""
 </style>
 
 
-７
-
 <!--このスライドのみ以下を適用-->
 <!--
 _class: lead
@@ -73,7 +71,7 @@ New preprint
   <!--![bg  center](drawio/sample4.drawio.svg)-->
   <!--![80% bg right:50%](./drawio/wataru_mizukami.svg)-->
   
-  **Today's talk is based on following preprint**
+  **Today's talk is based on**
   > ## **Hybrid quantum-classical algorithm for computing imaginary-time correlation functions**
   > <https://arxiv.org/abs/2112.02764>
 
@@ -92,49 +90,49 @@ New preprint
 
 # Computational materials science
 
-- 密度汎関数理論 (DFT)の概略とその問題点についてまとめる 
-- DFTとは？単一のスレーター行列で電子状態を近似。
-- DFTの成功例：多くの半導体や金属の電子状態の記述
-- メリット：計算量が少なくて済む。軌道の数Nの三乗の計算コストで済む。
-- 弱点；強相関電子系（銅酸化物高温超伝導、有機物質など）では、破綻する。エンタングルメントエントロピー
-- 
+Density functional theory (DFT)
+- Approximates the electronic quantum state with a single slater determinant.
+- Success：Many semiconductors and metals
+- Strong：Low computational cost ~$O(N^3$) (N: #of orbitals).
+- Weakness : strongly correlated electron systems 
+(e.g. cuprate high-temperature superconductivity) 
+
 
 
 ---
-# Dynamical mean-field theory (DMFT)
+# Quantum embedding theory  (Dynamical mean-field theory)
 
 ![bg right width:160% height:165%](drawio/dmft.drawio.svg)
 
-- 
+- Focus on one part of the whole system
 - effective bath parameters are determined from the self-consistent condition:
-- 動的な応答を記述するために広く用いられている。
-- スペクトル？
-- ざっくり話す
+- Physical quantities described by response functions are important.
+(single-particle excitation spectral functions or lattice spin susceptibility) 
+- In the field of quantum chemistry, density matrix embedding theory (DMET) are used. 
+ 
+- Why are multi-orbital and multi-atomic important?
+-->quantitative description of unconventional superconductivity
+<!--エネルギー方向にもバスがある。依存した-->
+
 
 ---
 # Dynamical mean-field theory (DMFT)
 - The biggest bottle neck: **quantum impurity problem (Computing Green's function)**
-- Classical methods: Quantum monte carlo, Tensor network
-- Solving impurity models wit multi-orbital and multi impurity sites is challenging task
-- 単原子、少数軌道が限界（量子モンテカルロ法かDMRG）
-- 古典だと次元が粒子数に対して、指数的に増える
-- なぜ多軌道・多原子か？例えば、非従来型のd波超伝導の定量的記述が可能になる。
-- 大規模な系だと、量子計算が必要になる。
+
+- Single impurity with few orbitals are the limit by classical methods: Quantum Monte Carlo , MPS/Tensor network 
+
+- Solving impurity models wit multi-orbital and multi impurity sites is a challenging task.
+
+
+
+|    |  $G(t)/G(\omega)$ (Real) | $G(\tau)/G(i\omega)$ (Imaginary)   |
+| ---- | ---- | ---- |
+|  Pros  |  Accurate description of spectral functions  |  Fewer bath sites    |
+|  Cons  |   Many bath sites             |  Inaccurate description of spectral functions <br> at high frequencies  |
+
 
 <!-- -->
 
----
-
-- 自己無撞着計算の話
-- バスの離散化(Dicsritization the freedom of the environment with bath sites)
-- 実時間と許時間形式のメリット
-- 通常,虚数波数を用いることが多い。
-- 
-
-|    |  Real  | Imaginary   |
-| ---- | ---- | ---- |
-|  Pros  |  Easy in Reproducing spectral functions |  fewer bath sites    |
-|  Cons  |   many bath sites             | Difficulity in reproducing spectral functions <br> in the high frequency range      |
 ---
 # Solving impurity problems with Quantum computer
 
@@ -149,13 +147,13 @@ _footer:   ""
 
 #### Foult-tolerant quantum computer
 
-- Quantum phase estimation algorithm 
-- It assumes fault-tolerant QC
+- Algorithm based on Quantum phase estimation algorithm (~2015)
+- Too much hardware resources
 
 #### Quantum devices with limited hardware resources 
 - e.g.) Noisy Intermediate Scale Devices (NISQ) 
 noisy quantum devices with ~100 qubits, about 100 depth (# of time steps)
-- need to calculate expectation value of the square of the Hamiltonian 
+- Need to calculate expectation value of the square of the Hamiltonian 
 (H. Chen et _al_., arXiv :2105.01703v2) 
 - Efficient methods for computing imaginary-time Green's functions need to be explored
 - Our work: new algorithm to compute the imaginary-time Green's function
@@ -171,11 +169,13 @@ noisy quantum devices with ~100 qubits, about 100 depth (# of time steps)
     section {
         justify-content: start;
     }
-    section { font-size: 170%; }
+    section { font-size: 150%; }
 </style>
 
+![bg right:50%](drawio/gf_example.drawio.svg)
 
-  $${H} = \sum_{ij}^N t_{ij} \hat c^\dagger_i \hat c_j + \frac{1}{4} \sum_{ijkl} U_{ikjl}\hat c_i^\dagger \hat c_j^\dagger \hat c_l \hat c_k - \mu \sum_i \hat c^\dagger_i \hat c_i,$$
+$$
+{H} = \sum_{ij}^N t_{ij} \hat c^\dagger_i \hat c_j + \frac{1}{4} \sum_{ijkl} U_{ikjl}\hat c_i^\dagger \hat c_j^\dagger \hat c_l \hat c_k - \mu \sum_i \hat c^\dagger_i \hat c_i,$$
 
 $c_i/c^\dagger_i$ : the creation and annihilation operators for the spin orbital $i$
 
@@ -186,13 +186,14 @@ $$G_{a b}(\tau)=-\theta(\tau)\left\langle\hat{c}_{a}(\tau) \hat{c}_{b}^{\dagger}
 - At sufficiently low temperature $T$
 $$G_{a b}(\tau) \underset{T \rightarrow 0}{=} \mp\left\langle\Psi_{\mathrm{G}}\left|\hat{A}_{\pm} e^{\mp\left(\mathcal{H}-E_{\mathrm{G}}\right) \tau} \hat{B}_{\pm}\right| \Psi_{\mathrm{G}}\right\rangle,  |\Psi_{\mathrm{G}}\rangle:\text{ground state}$$
 
-$$
+$
 A_{+}=\hat{c}_{a} \text { and } B_{+}=\hat{c}_{b}^{\dagger} \text { for } 0 < \tau <\frac{\beta}{2}, 
- A_{-}=\hat{c}_{b}^{\dagger} \text { and } B_{+}=\hat{c}_{a} \text { for } -\frac{\beta}{2}<\tau<0
-,  (\beta=1/T)
-$$
+$
 
-
+$
+A_{-}=\hat{c}_{b}^{\dagger} \text { and } B_{+}=\hat{c}_{a} \text { for } -\frac{\beta}{2}<\tau<0
+$
+$(\beta=1/T)$
 
 
 
@@ -201,7 +202,12 @@ $$
 
 # Outline of our algorithm 
 
-
+<!--
+_class: lead
+_paginate: false
+_header:   ""
+_footer: セミナー@産総研　Date: 2021.12.24
+-->
 
 <style scoped>
     section {
@@ -224,12 +230,13 @@ $$
 -  Then, compute $G_{ij}(\tau)$ 
 
 For $\tau$>0, 
-$$
+$
 \begin{aligned}
-G_{i j}(\tau) &=-\operatorname{Tr}\left[e^{-\beta \hat{H}} c_{i}(\tau) c_{j}^{\dagger}(0)\right] / \operatorname{Tr}\left(e^{-\beta \mathcal{H}}\right) \\
-& \simeq-\underbrace{\left\langle\Phi_{G}(0)\right| e^{-(\beta-\tau) \hat{H}}}_{\left\langle\Phi_{C}^{\prime}\right|}  c_{i}(0)\underbrace{e^{-\tau \hat{H}} c_{j}^{\dagger}(0)\left|\Phi_{G}(0)\right\rangle}_{\left|\Phi_{C}\right\rangle}/\left(e^{-\beta E_{G}}\right)
+\\ G_{i j}(\tau) 
+ &=-\operatorname{Tr}\left[e^{-\beta \hat{H}} c_{i}(\tau) c_{j}^{\dagger}(0)\right] / \operatorname{Tr}\left(e^{-\beta \mathcal{H}}\right) \\
+&\simeq-\underbrace{\left\langle\Phi_{G}(0)\right| e^{-(\beta-\tau) \hat{H}}}_{\left\langle\Phi_{C}^{\prime}\right|}  c_{i}(0)\underbrace{e^{-\tau \hat{H}} c_{j}^{\dagger}(0)\left|\Phi_{G}(0)\right\rangle}_{\left|\Phi_{C}\right\rangle}/\left(e^{-\beta E_{G}}\right)
 \end{aligned}
-$$
+$
 
 ![bg center width:140% height:135%](drawio/stage.drawio.svg)
 
@@ -399,7 +406,7 @@ $\left\langle\Psi_{\mathrm{G}}\left|A_{\pm}\right| \Psi_{\mathrm{IM}}\right\rang
 
 #### Ansatz
 - Unitary coupled cluster with generalized singles and doubles (UCCGSD)
-(Nooijen, Marcel. Phys. Rev. Lett. **84**, 2108 (2000), 
+(M. Nooijen, Phys. Rev. Lett. **84**, 2108 (2000), 
 J. Lee, _et al_., Journal  of  chemical  theory and computation **15**, 311 (2019))
 - $U(\boldsymbol{\theta})=
  \prod_{i, j, a, b=1}^{n}\left\{e^{\theta_{i j}^{a b} a_{a}^{\dagger} a_{b}^{\dagger} a_{j} a_{i}- \theta_{i j}^{a b}a_{i}^{\dagger} a_{j}^{\dagger} a_{b} a_{a}}\right\} \prod_{a, i=1}^{n}\left\{e^{\theta_{i}^{a} a_{a}^{\dagger} a_{i}-\theta_{i}^{a } a_{i}^{\dagger} a_{a}}\right\}$
@@ -437,6 +444,9 @@ $
 \end{aligned}
 $
 
+- $U$=1,$\mu$=1/2, $V$=1, $\epsilon_{b}$=1
+- At half-filling
+- #of parameters: 104
 - 79 sparse sampling points 
 - Non-diagonal componet also can be computed
 
@@ -461,7 +471,9 @@ H &=U \hat{n}_{0 \uparrow} \hat{n}_{0 \downarrow}-\mu \sum_{\sigma=\uparrow, \do
 \end{aligned}
 $
 
+- value of parametes is obtained by DMFT calculation
 - At half-filling
+- #of parameters: 1568 
 - 70 sparse sampling points + adaptive construction of the mesh
 
 
@@ -478,9 +490,9 @@ $
 
 # Results : Fourier-transformed Green's function
 
-- We use irbasis (N. Chikano _et al_., Comput. Phys. Commun. **240**, 181 (2019))
-- Matsubara Green's function 
-- Previous study: Corrrection vector
+- We use a library called「irbasis」 (N. Chikano _et al_., Comput. Phys. Commun. **240**, 181 (2019))
+- Fourier-transformed Green's function (Matsubara Green's function) $G_{a b}(\mathrm{i} \nu)=\int_{0}^{\beta} \mathrm{d} \tau e^{\mathrm{i} \nu \tau} G_{a b}(\tau)$
+
 
 
 ![bg center width:110% height:140%](drawio/fourier.drawio.svg)
@@ -590,6 +602,14 @@ $
 - ただ、解析接続時に高周波数の領域のスペクトル関数が精度良く再現しづらい。
 - 実時間・実周波数/虚時間・虚周波数
 - 実時間形式は、バスの数が多く
-- 
-
+- 擬似温度というものを導入します。これは温度の逆数です。
+- どういう物質を定量的に計算したいのか？
 |prso|cons|
+
+
+
+- 自己無撞着計算の話
+- バスの離散化(Dicsritization the freedom of the environment with bath sites)
+- 実時間と許時間形式のメリット
+- 通常,虚数波数を用いることが多い。
+- 
