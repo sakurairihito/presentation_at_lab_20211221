@@ -15,5 +15,5 @@ https://sakurairihito.github.io/presentation_at_lab_20211221/
 
 
 
-### GithubActionsの参考ウェブサイト
+### Marp + GithubActionsの参考ウェブサイト
 - https://github.com/KoharaKazuya/marp-cli-action-gh-pages-template
